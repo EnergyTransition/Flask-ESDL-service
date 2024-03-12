@@ -17,7 +17,7 @@ import logging.config
 from flask import Flask, Blueprint
 from application import settings
 from application.api import api
-from application.api.ns_esdl import ns as ns_esdl
+from application.api.count import api as count_api
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -54,7 +54,7 @@ def initialize_app(flask_app):
 
     blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
-    api.add_namespace(ns_esdl)
+    api.add_namespace(count_api)
     flask_app.register_blueprint(blueprint)
 
 

@@ -11,22 +11,13 @@
 #      TNO         - Initial implementation
 #  Manager:
 #      TNO
-
-import logging
-
-from flask_restx import Api
-from application import settings
-
-log = logging.getLogger(__name__)
-
-api = Api(version='0.1', title='Flask ESDL service',
-          description='An example implementation of a service that processes an ESDL energy system description')
+from dataclasses import dataclass
+import marshmallow_dataclass
 
 
-@api.errorhandler
-def default_error_handler(e):
-    message = 'An unhandled exception occurred.'
-    log.exception(message)
+@dataclass
+class CountRequest:
+    energysystem: str
 
-    if not settings.FLASK_DEBUG:
-        return {'message': message}, 500
+
+CountRequestSchema = marshmallow_dataclass.class_schema(CountRequest)

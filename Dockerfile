@@ -1,7 +1,7 @@
-FROM python:3-alpine
+FROM python:3.9-slim
 MAINTAINER Edwin Matthijssen <edwin.matthijssen@tno.nl>
 
-RUN apk add --update --no-cache g++ gcc libxslt-dev
+RUN apt-get update
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

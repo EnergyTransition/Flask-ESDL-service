@@ -14,31 +14,32 @@
 
 import logging
 import base64
-import urllib
-from application.esdl_service import es_process
-from flask import request
-from flask_restplus import Resource, fields
-from application.api import api
 import json
+import urllib
+
+from flask import request
+from flask_restx import Namespace, Resource
+from flask_accepts import accepts
+
+from application.api.schema import CountRequestSchema, CountRequest
+from application.esdl_service import es_process
+from application.api import api
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace('esdl_service', description='Operations to process an energy system described in ESDL')
+api = Namespace('esdl_service', path="/", description='Operations to process an energy system described in ESDL')
 
 
-post_body = api.model('PostBody', {
-    "energysystem": fields.String
-})
+@api.route('/count_esdl_objects')
+class CountESDLObjects(Resource):
 
-
-@ns.route('/count_esdl_objects', methods=['POST'])
-class CountESDLObjectsPost(Resource):
-
-    @api.expect(post_body)
+    @accepts(schema=CountRequestSchema, api=api)
     def post(self):
-        post_body = json.loads(request.get_data().decode("utf-8"))
+        query_params: CountRequest = request.parsed_obj
 
-        es_b64_bytes = post_body["energysystem"].encode('utf-8')
+        # post_body = json.loads(request.get_data().decode("utf-8"))
+
+        es_b64_bytes = query_params.energysystem.encode('utf-8')
         es_bytes = base64.decodebytes(es_b64_bytes)
         esdl_string = es_bytes.decode('utf-8')
 
